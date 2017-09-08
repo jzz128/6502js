@@ -497,7 +497,7 @@ function SimulatorWidget(node) {
       },
 
       i01: function () {
-        var zp = (popByte() + regX) & 0xff;
+        var zp = (popByte()) & 0xff;
         var addr = memory.getWord(zp);
         var value = memory.get(addr);
         regA |= value;
@@ -557,7 +557,7 @@ function SimulatorWidget(node) {
 
       i11: function () {
         var zp = popByte();
-        var value = memory.getWord(zp) + regY;
+        var value = memory.getWord(zp) + regX;
         regA |= memory.get(value);
         ORA();
       },
@@ -612,7 +612,7 @@ function SimulatorWidget(node) {
       },
 
       i21: function () {
-        var zp = (popByte() + regX) & 0xff;
+        var zp = (popByte()) & 0xff;
         var addr = memory.getWord(zp);
         var value = memory.get(addr);
         regA &= value;
@@ -690,7 +690,7 @@ function SimulatorWidget(node) {
 
       i31: function () {
         var zp = popByte();
-        var value = memory.getWord(zp) + regY;
+        var value = memory.getWord(zp) + regX;
         regA &= memory.get(value);
         AND();
       },
@@ -748,7 +748,7 @@ function SimulatorWidget(node) {
       },
 
       i41: function () {
-        var zp = (popByte() + regX) & 0xff;
+        var zp = (popByte()) & 0xff;
         var value = memory.getWord(zp);
         regA ^= memory.get(value);
         EOR();
@@ -815,7 +815,7 @@ function SimulatorWidget(node) {
 
       i51: function () {
         var zp = popByte();
-        var value = memory.getWord(zp) + regY;
+        var value = memory.getWord(zp) + regX;
         regA ^= memory.get(value);
         EOR();
       },
@@ -870,7 +870,7 @@ function SimulatorWidget(node) {
       },
 
       i61: function () {
-        var zp = (popByte() + regX) & 0xff;
+        var zp = (popByte()) & 0xff;
         var addr = memory.getWord(zp);
         var value = memory.get(addr);
         testADC(value);
@@ -947,7 +947,7 @@ function SimulatorWidget(node) {
       i71: function () {
         var zp = popByte();
         var addr = memory.getWord(zp);
-        var value = memory.get(addr + regY);
+        var value = memory.get(addr + regX);
         testADC(value);
         //ADC
       },
@@ -1106,7 +1106,7 @@ function SimulatorWidget(node) {
       },
 
       ia1: function () {
-        var zp = (popByte() + regX) & 0xff;
+        var zp = (popByte()) & 0xff;
         var addr = memory.getWord(zp);
         regA = memory.get(addr);
         LDA();
@@ -1172,7 +1172,7 @@ function SimulatorWidget(node) {
 
       ib1: function () {
         var zp = popByte();
-        var addr = memory.getWord(zp) + regY;
+        var addr = memory.getWord(zp) + regX;
         regA = memory.get(addr);
         LDA();
       },
@@ -1233,7 +1233,7 @@ function SimulatorWidget(node) {
       },
 
       ic1: function () {
-        var zp = (popByte() + regX) & 0xff;
+        var zp = (popByte()) & 0xff;
         var addr = memory.getWord(zp);
         var value = memory.get(addr);
         doCompare(regA, value);
@@ -1300,7 +1300,7 @@ function SimulatorWidget(node) {
 
       id1: function () {
         var zp = popByte();
-        var addr = memory.getWord(zp) + regY;
+        var addr = memory.getWord(zp) + regX;
         var value = memory.get(addr);
         doCompare(regA, value);
         //CMP
@@ -1348,7 +1348,7 @@ function SimulatorWidget(node) {
       },
 
       ie1: function () {
-        var zp = (popByte() + regX) & 0xff;
+        var zp = (popByte()) & 0xff;
         var addr = memory.getWord(zp);
         var value = memory.get(addr);
         testSBC(value);
@@ -1416,7 +1416,7 @@ function SimulatorWidget(node) {
       if1: function () {
         var zp = popByte();
         var addr = memory.getWord(zp);
-        var value = memory.get(addr + regY);
+        var value = memory.get(addr + regX);
         testSBC(value);
         //SBC
       },
@@ -1761,8 +1761,8 @@ function SimulatorWidget(node) {
 
     var Opcodes = [
       /* Name, Imm,  ZP,   ZPX,  ZPY,  ABS, ABSX, ABSY,  IND, INDX, INDY, SNGL, BRA */
-      ["ADC", 0x69, 0x65, 0x75, null, 0x6d, 0x7d, 0x79, null, 0x61, 0x71, null, null],
-      ["AND", 0x29, 0x25, 0x35, null, 0x2d, 0x3d, 0x39, null, 0x21, 0x31, null, null],
+      ["ADC", 0x69, 0x65, 0x75, null, 0x6d, 0x7d, 0x79, 0x61, null, 0x71, null, null],
+      ["AND", 0x29, 0x25, 0x35, null, 0x2d, 0x3d, 0x39, 0x21, null, 0x31, null, null],
       ["ASL", null, 0x06, 0x16, null, 0x0e, 0x1e, null, null, null, null, 0x0a, null],
       ["BIT", null, 0x24, null, null, 0x2c, null, null, null, null, null, null, null],
       ["BPL", null, null, null, null, null, null, null, null, null, null, null, 0x10],
@@ -1774,11 +1774,11 @@ function SimulatorWidget(node) {
       ["BNE", null, null, null, null, null, null, null, null, null, null, null, 0xd0],
       ["BEQ", null, null, null, null, null, null, null, null, null, null, null, 0xf0],
       ["BRK", null, null, null, null, null, null, null, null, null, null, 0x00, null],
-      ["CMP", 0xc9, 0xc5, 0xd5, null, 0xcd, 0xdd, 0xd9, null, 0xc1, 0xd1, null, null],
+      ["CMP", 0xc9, 0xc5, 0xd5, null, 0xcd, 0xdd, 0xd9, 0xc1, null, 0xd1, null, null],
       ["CPX", 0xe0, 0xe4, null, null, 0xec, null, null, null, null, null, null, null],
       ["CPY", 0xc0, 0xc4, null, null, 0xcc, null, null, null, null, null, null, null],
       ["DEC", null, 0xc6, 0xd6, null, 0xce, 0xde, null, null, null, null, null, null],
-      ["EOR", 0x49, 0x45, 0x55, null, 0x4d, 0x5d, 0x59, null, 0x41, 0x51, null, null],
+      ["EOR", 0x49, 0x45, 0x55, null, 0x4d, 0x5d, 0x59, 0x41, null, 0x51, null, null],
       ["CLC", null, null, null, null, null, null, null, null, null, null, 0x18, null],
       ["SEC", null, null, null, null, null, null, null, null, null, null, 0x38, null],
       ["CLI", null, null, null, null, null, null, null, null, null, null, 0x58, null],
@@ -1789,12 +1789,12 @@ function SimulatorWidget(node) {
       ["INC", null, 0xe6, 0xf6, null, 0xee, 0xfe, null, null, null, null, null, null],
       ["JMP", null, null, null, null, 0x4c, null, null, 0x6c, null, null, null, null],
       ["JSR", null, null, null, null, 0x20, null, null, null, null, null, null, null],
-      ["LDA", 0xa9, 0xa5, 0xb5, null, 0xad, 0xbd, 0xb9, null, 0xa1, 0xb1, null, null],
+      ["LDA", 0xa9, 0xa5, 0xb5, null, 0xad, 0xbd, 0xb9, 0xa1, null, 0xb1, null, null],
       ["LDX", 0xa2, 0xa6, null, 0xb6, 0xae, null, 0xbe, null, null, null, null, null],
       ["LDY", 0xa0, 0xa4, 0xb4, null, 0xac, 0xbc, null, null, null, null, null, null],
       ["LSR", null, 0x46, 0x56, null, 0x4e, 0x5e, null, null, null, null, 0x4a, null],
       ["NOP", null, null, null, null, null, null, null, null, null, null, 0xea, null],
-      ["ORA", 0x09, 0x05, 0x15, null, 0x0d, 0x1d, 0x19, null, 0x01, 0x11, null, null],
+      ["ORA", 0x09, 0x05, 0x15, null, 0x0d, 0x1d, 0x19, 0x01, null, 0x11, null, null],
       ["TAX", null, null, null, null, null, null, null, null, null, null, 0xaa, null],
       ["TXA", null, null, null, null, null, null, null, null, null, null, 0x8a, null],
       ["DEX", null, null, null, null, null, null, null, null, null, null, 0xca, null],
@@ -1807,7 +1807,7 @@ function SimulatorWidget(node) {
       ["ROL", null, 0x26, 0x36, null, 0x2e, 0x3e, null, null, null, null, 0x2a, null],
       ["RTI", null, null, null, null, null, null, null, null, null, null, 0x40, null],
       ["RTS", null, null, null, null, null, null, null, null, null, null, 0x60, null],
-      ["SBC", 0xe9, 0xe5, 0xf5, null, 0xed, 0xfd, 0xf9, null, 0xe1, 0xf1, null, null],
+      ["SBC", 0xe9, 0xe5, 0xf5, null, 0xed, 0xfd, 0xf9, 0xe1, null, 0xf1, null, null],
       ["STA", null, 0x85, 0x95, null, 0x8d, 0x9d, 0x99, null, 0x81, 0x91, null, null],
       ["TXS", null, null, null, null, null, null, null, null, null, null, 0x9a, null],
       ["TSX", null, null, null, null, null, null, null, null, null, null, 0xba, null],
@@ -2076,10 +2076,11 @@ function SimulatorWidget(node) {
     }
 
     // checkIndirectY() - Check if param is indirect Y and push value
+    // change to use X register for CP39
     function checkIndirectY(param, opcode) {
       var value;
       if (opcode === null) { return false; }
-      if (param.match(/^\(\$[0-9a-f]{1,2}\),Y$/i)) {
+      if (param.match(/^\(\$[0-9a-f]{1,2}\),X$/i)) {
         pushByte(opcode);
         value = param.replace(/^\([\$]([0-9a-f]{1,2}).*$/i, "$1");
         if (value < 0 || value > 255) { return false; }
@@ -2389,7 +2390,7 @@ function SimulatorWidget(node) {
           argsString = '(' + argsString + ')';
         }
         if (mode.match(/Y$/)) {
-          argsString += ',Y';
+          argsString += ',X';
         }
 
         if (isAccumulatorInstruction()) {
